@@ -6,16 +6,17 @@ namespace cs2hlsl;
 public abstract class ShaderAsset<TProperties> where TProperties : Properties
 {
     // https://docs.unity3d.com/ja/2021.3/Manual/SL-Shader.html
-    public abstract string Name { get; }
-    public abstract TProperties Properties { get; }
+    public abstract string? Name { get; }
+    public abstract Properties Properties { get; }
     public abstract SubShader<TProperties>[] SubShaders { get; }
-    public abstract string FallbackShaderName { get; }
-    public abstract string CustomEditor { get; }
+    public abstract string? FallbackShaderName { get; }
+    public abstract string? CustomEditor { get; }
 }
 
 public abstract class Properties
 {
     // https://docs.unity3d.com/ja/2021.3/Manual/SL-Properties.html
+    // example
     // [PerRendererData] [Label(MainTex)] public Texture2D _MainTex = Texture2D.white;
     // [HDR] [Label(TintColor)] public Color _Color = Color.black;
     // [Range(0, 1)] [Label(TintColor)] public float _Power = 1;
@@ -25,7 +26,7 @@ public abstract class SubShader<TProperties> where TProperties : Properties
 {
     // https://docs.unity3d.com/ja/2021.3/Manual/SL-SubShader.html
     public abstract Dictionary<string, string> Tags { get; }
-    public abstract int LOD { get; }
+    public abstract int? LOD { get; }
     public abstract Pass<TProperties>[] Passes { get; }
 }
 
@@ -47,7 +48,7 @@ public abstract class Pass
 public abstract class Pass<TProperties> : Pass where TProperties : Properties
 {
     // https://docs.unity3d.com/ja/2021.3/Manual/SL-Pass.html
-    public abstract string Name { get; }
+    public abstract string? Name { get; }
     public abstract Dictionary<string, string> Tags { get; }
     public abstract Dictionary<string, string> Commands { get; } // https://docs.unity3d.com/ja/2021.3/Manual/shader-shaderlab-commands.html
 
@@ -76,7 +77,7 @@ public abstract class Pass<TProperties> : Pass where TProperties : Properties
             arguments[parameter.Position] = input[parameterSemanticAttribute.Value];
         }
         
-        var returnValue = function.Invoke(null, arguments);
+        var returnValue = function.Invoke(this, arguments);
 
         // colect output semantics
         var output = new Dictionary<Semantic, object>();
